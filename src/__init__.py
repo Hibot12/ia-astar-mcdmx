@@ -1,2 +1,8 @@
+from .gui import MetroGUI
+
+
 def main():
-    print("Hello World")
+    # Instanciamos la GUI principal.
+
+    app = MetroGUI()
+    app.mainloop()

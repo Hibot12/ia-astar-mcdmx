@@ -1,5 +1,6 @@
 import heapq
 
+
 class MexicoCityMetro:
     
     def __init__(self): 
@@ -276,10 +277,6 @@ class MexicoCityMetro:
         print("No encontramos un camino de'{estacion_orig}' a '{estacion_dest}'")
         return None, None
 
-
-
-
-    
     
     def reconstruct_path(self, previous_estacions, start, end):
         # 1. CHECK IF PATH EXISTS:

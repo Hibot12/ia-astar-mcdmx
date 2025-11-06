@@ -3,9 +3,6 @@
 La tabla heurística se autogenera desde el grafo `Mapa` (grafo.py) con los pesos
 actuales, por lo que permanece alineada si cambian los weights del grafo.
 
-Propiedades:
-- h es minorante y consistente (usa el coste real óptimo precalculado).
-- A* es admisible y óptimo con esta h.
 """
 
 from typing import Dict
@@ -13,22 +10,25 @@ from typing import Dict
 import networkx as nx
 from .grafo import Mapa  # Grafo con pesos 'weight' declarado en grafo.py
 
-HeuristicTable = Dict[str, Dict[str, int]]
+
+def build_heuristic_table(grafo: nx.Graph) -> Dict[str, Dict[str, int]]:
+    """
+    Calcula los costes mínimos (sumas de 'weight') entre todas las estaciones del grafo.
+    Se recorre el resultado de all_pairs_dijkstra_path_length y se arma el diccionario a mano.
+    """
+    tabla: Dict[str, Dict[str, int]] = {}
+
+    for origen, distancias in nx.all_pairs_dijkstra_path_length(grafo, weight="weight"):
+        tabla[origen] = {}
+        for destino, coste in distancias.items():
+            if destino == origen:
+                continue
+            tabla[origen][destino] = int(coste)
+
+    return tabla
 
 
-def _build_heuristic_table(grafo: nx.Graph) -> HeuristicTable:
-    """Precalcula las distancias mínimas (suma de `weight`) entre todas las estaciones."""
-    return {
-        origen: {
-            destino: int(coste)
-            for destino, coste in distancias.items()
-            if destino != origen
-        }
-        for origen, distancias in nx.all_pairs_dijkstra_path_length(grafo, weight="weight")
-    }
-
-
-_HEURISTIC_TABLE = _build_heuristic_table(Mapa)
+m: Dict[str, Dict[str, int]] = build_heuristic_table(Mapa)
 
 
 def h(c: str, t: str) -> int:
@@ -38,8 +38,12 @@ def h(c: str, t: str) -> int:
     if c == t:
         return 0
 
-    try:
-        return _HEURISTIC_TABLE[c][t]
-    except KeyError as exc:  # pragma: no cover - señalamos la pareja faltante.
-        pareja = f"{c!r} -> {t!r}"
-        raise KeyError(f"No existe heurística precalculada para {pareja}") from exc
+    if c not in m:
+        raise KeyError(c)
+
+    destinos = m[c]
+
+    if t not in destinos:
+        raise KeyError(t)
+
+    return destinos[t]

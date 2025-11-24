@@ -33,9 +33,9 @@ def h(c: str, t: str) -> float:
         return 0.0
 
     if c not in m:
-        return 0.0  # Si no está en la tabla, devolvemos 0 (como Dijkstra)
+        raise KeyError(c)
 
     if t not in m[c]:
-        return 0.0  # Si no hay camino conocido en la tabla
+        raise KeyError(t)
 
     return m[c][t]

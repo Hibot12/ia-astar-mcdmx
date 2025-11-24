@@ -135,24 +135,24 @@ class MetroGUI(tk.Tk):
             "Observatorio": (136, 349),
             "Patriotismo": (269, 305),
             "Chilpancingo": (372, 305),
-            "Lazaro Cardenas": (542, 305),  # Sin tilde como lo guardó el usuario
-            "Juanacatlan": (220, 263),  # Sin tilde
+            "Lazaro Cardenas": (542, 305),  
+            "Juanacatlan": (220, 263),  
             "Chapultepec": (257, 226),
             "Sevilla": (299, 185),
             "Insurgentes": (341, 151),
-            "Cuauhtemoc": (386, 150),  # Sin tilde
+            "Cuauhtemoc": (386, 150),  
             "Balderas": (436, 151),
-            "Juarez": (436, 78),  # Sin tilde
-            "Niños Héroes": (436, 187),  # Con tilde como lo guardó el usuario
+            "Juarez": (436, 78),  
+            "Niños Heroes": (436, 187),  
             "Hospital General": (437, 230),
-            "Centro Medico": (436, 304),  # Sin tilde
-            "Etiopia": (437, 345),  # Sin tilde
+            "Centro Medico": (436, 304),  
+            "Etiopia": (437, 345),  
             "Eugenia": (436, 382),
-            "Division del Norte": (437, 422),  # Sin tilde
+            "Division del Norte": (437, 422),  
             "Zapata": (436, 463),
-            "Coyoacan": (437, 501),  # Sin tilde
+            "Coyoacan": (437, 501),  
             "Viveros": (437, 542),
-            "Miguel Ángel de Quevedo": (436, 580),  # Con tildes
+            "Miguel Angel de Quevedo": (436, 580),  
             "Copilco": (437, 619),
             "Universidad": (437, 658),
             "Parque de los Venados": (535, 461),

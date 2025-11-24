@@ -93,8 +93,7 @@ class MetroGUI(tk.Tk):
         result_frame.pack(fill=tk.BOTH, expand=True, pady=10)
 
         # un widget de texto para mostrar el recorrido completo
-        # bg oscuro y fg blanco para el tema
-        # state disabled para que no se pueda escribir, solo seleccionar
+        # bg oscuro y fg blanco para el tema, state disabled para que no se pueda escribir
         self.result_text = tk.Text(
             result_frame,
             width=40,
@@ -114,7 +113,6 @@ class MetroGUI(tk.Tk):
         self.result_text.config(yscrollcommand=scrollbar.set)
 
         # esto crea el canvas para mostrar el mapa del metro
-        # fondo oscuro para que cuadre con el tema
         self.canvas = tk.Canvas(right_frame, bg="#2E2E2E", highlightthickness=0)
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
@@ -135,24 +133,24 @@ class MetroGUI(tk.Tk):
             "Observatorio": (136, 349),
             "Patriotismo": (269, 305),
             "Chilpancingo": (372, 305),
-            "Lazaro Cardenas": (542, 305),  
-            "Juanacatlan": (220, 263),  
+            "Lazaro Cardenas": (542, 305),  # Sin tilde como lo guardó el usuario
+            "Juanacatlan": (220, 263),  # Sin tilde
             "Chapultepec": (257, 226),
             "Sevilla": (299, 185),
             "Insurgentes": (341, 151),
-            "Cuauhtemoc": (386, 150),  
+            "Cuauhtemoc": (386, 150),  # Sin tilde
             "Balderas": (436, 151),
-            "Juarez": (436, 78),  
-            "Niños Heroes": (436, 187),  
+            "Juarez": (436, 78),  # Sin tilde
+            "Niños Heroes": (436, 187),  # Con tilde como lo guardó el usuario
             "Hospital General": (437, 230),
-            "Centro Medico": (436, 304),  
-            "Etiopia": (437, 345),  
+            "Centro Medico": (436, 304),  # Sin tilde
+            "Etiopia": (437, 345),  # Sin tilde
             "Eugenia": (436, 382),
-            "Division del Norte": (437, 422),  
+            "Division del Norte": (437, 422),  # Sin tilde
             "Zapata": (436, 463),
-            "Coyoacan": (437, 501),  
+            "Coyoacan": (437, 501),  # Sin tilde
             "Viveros": (437, 542),
-            "Miguel Angel de Quevedo": (436, 580),  
+            "Miguel Angel de Quevedo": (436, 580),  # Con tildes
             "Copilco": (437, 619),
             "Universidad": (437, 658),
             "Parque de los Venados": (535, 461),
@@ -225,12 +223,9 @@ class MetroGUI(tk.Tk):
         return None
 
     def write_result(self, text):
-        # funcion auxiliar para escribir en el cuadro de texto de solo lectura
-        # habilitamos la escritura
+        # funcion auxiliar para escribir en el cuadro de texto
         self.result_text.config(state="normal")
-        # escribimos al final
         self.result_text.insert(tk.END, text)
-        # deshabilitamos para que el usuario no pueda borrar
         self.result_text.config(state="disabled")
 
     def clear_result(self):
@@ -241,11 +236,9 @@ class MetroGUI(tk.Tk):
 
     def display_image(self, path=None):
         # esta funcion muestra el mapa del metro con la ruta resaltada en ROJO
-        # si no tiene la imagen original return
         if not hasattr(self, "original_image"):
             return
 
-        # creamos una copia de la imagen original
         img = self.original_image.copy()
 
         # si hay una ruta, la dibujamos en ROJO sobre el mapa
@@ -257,34 +250,28 @@ class MetroGUI(tk.Tk):
                 estacion1 = path[i]
                 estacion2 = path[i + 1]
 
-                # usamos el metodo seguro para obtener coordenadas
                 coord1 = self.get_coords_safe(estacion1)
                 coord2 = self.get_coords_safe(estacion2)
 
                 if coord1 and coord2:
-                    # si las coordenadas son distintas dibujamos linea
-                    # si son iguales es un transbordo visualmente estatico
                     if coord1 != coord2:
                         x1, y1 = coord1
                         x2, y2 = coord2
-                        # dibujamos la linea ROJA para la ruta
                         draw.line([(x1, y1), (x2, y2)], fill="#FF0000", width=8)
 
-            # dibujamos circulos en cada estacion de la ruta
+            # dibujamos circulos en cada estacion
             for estacion in path:
                 coord = self.get_coords_safe(estacion)
                 if coord:
                     x, y = coord
                     radio = 10
 
-                    # hacemos que la estacion de origen sea verde y la de destino sea azul
                     if estacion == path[0]:
-                        color = "#00FF00"  # Verde brillante
+                        color = "#00FF00"  # Verde
                     elif estacion == path[-1]:
-                        color = "#0000FF"  # Azul brillante
+                        color = "#0000FF"  # Azul
                     elif "_" in estacion and path.count(estacion.split("_")[0]) > 0:
-                        # es un nodo de transbordo
-                        color = "#FFA500"  # Naranja
+                        color = "#FFA500"  # Naranja (transbordo)
                     else:
                         color = "#FF0000"  # Rojo
 
@@ -295,52 +282,35 @@ class MetroGUI(tk.Tk):
                         width=3,
                     )
 
-        # esto redimensiona la imagen para ajustar al canvas
-        # obtenemos el ancho actual del canvas en pixeles
+        # redimensiona la imagen para ajustar al canvas
         canvas_width = self.canvas.winfo_width()
-        # obtenemos la altura actual del canvas en pixeles
         canvas_height = self.canvas.winfo_height()
 
-        # esto verifica que el canvas tiene dimensiones validas (que sea mayor que 1 pixel)
         if canvas_width > 1 and canvas_height > 1:
-            # calculamos la proporcion de aspecto de la imagen (ancho/alto)
             img_ratio = img.width / img.height
-            # calculamos la proporcion de aspecto del canvas
             canvas_ratio = canvas_width / canvas_height
 
-            # aqui determinamos como redimensionar la imagen manteniendo su proporsion
             if img_ratio > canvas_ratio:
-                # si la imagen es mas ancha proporcionalmente, ajustamos por el ancho
                 new_width = canvas_width
                 new_height = int(canvas_width / img_ratio)
             else:
-                # si la imagen es mas alto proporcionalmente, ajustamos por la altura
                 new_height = canvas_height
                 new_width = int(canvas_height * img_ratio)
 
-            # redimensionamos la imagen a las nuevas dimensiones
             img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
-        # convertimos la imagen a una version que tkinter pueda mostrar
         self.photo = ImageTk.PhotoImage(img)
-        # tambien borramos todo el contenido anterior del canvas
         self.canvas.delete("all")
-        # dibujamos la nueva imagen en el canvas en la posición (0, 0)
         self.canvas.create_image(0, 0, anchor=tk.NW, image=self.photo)
 
     def mostrar_inputs(self):
-        # esto es la funcion que funciona cuando el usuario pulsa el boton
         origen = self.entry_origen.get()
         destino = self.entry_destino.get()
 
-        # actualizar etiquetas
         self.output_estacion_orig.config(text=f"Origen: {origen}")
         self.output_estacion_dest.config(text=f"Destino: {destino}")
-
-        # limpiar resultados anteriores
         self.clear_result()
 
-        # validar entrada
         if not origen or not destino:
             self.write_result("⚠️ Por favor introduzca ambas estaciones.\n")
             self.display_image()
@@ -349,17 +319,12 @@ class MetroGUI(tk.Tk):
         # buscar la ruta usando el algoritmo
         path, length = calcular_ruta(origen, destino)
 
-        # SI ES ERROR (STR) O NONE
         if isinstance(path, str) or path is None:
-            self.write_result(f"No se encontró una ruta entre:\n")
-            self.write_result(f"   '{origen}' y '{destino}'\n\n")
-
-            # Solo mostramos el mensaje del algoritmo si es un string descriptivo
+            self.write_result(
+                f"No se encontró una ruta entre:\n   '{origen}' y '{destino}'\n\n"
+            )
             if isinstance(path, str):
-                self.write_result(
-                    f"{path}\n"
-                )  # Ya tiene "Error:" dentro en algoritmo.py
-
+                self.write_result(f"{path}\n")
             self.display_image()
             return
 
@@ -372,7 +337,6 @@ class MetroGUI(tk.Tk):
         self.write_result(f"Destino: {destino}\n")
         self.write_result(f"Tiempo Estimado: {length:.1f} minutos\n")
         self.write_result(f"Numero de Estaciones: {len(path)}\n\n")
-
         self.write_result("RECORRIDO:\n")
         self.write_result("-" * 35 + "\n")
 
@@ -383,7 +347,7 @@ class MetroGUI(tk.Tk):
                 parts = station_node.split("_")
                 display_name = f"{parts[0]} ({parts[1].replace('L','Línea ')})"
 
-            # detectar transbordo para mostrar en texto
+            # detectar transbordo
             prefix = ""
             if i > 1:
                 prev_node = path[i - 2]
@@ -403,7 +367,6 @@ class MetroGUI(tk.Tk):
             else:
                 self.write_result(f" {i:2d}. {display_name}\n")
 
-        # mostrar en el mapa con la ruta en ROJO
         self.display_image(path)
 
 

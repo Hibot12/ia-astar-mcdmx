@@ -1,52 +1,71 @@
 import networkx as nx
 
-
+# creamos el grafo
 Mapa = nx.Graph()
 
-# Línea 1  (Observatorio -> Balderas)
-Mapa.add_edge("Observatorio", "Tacubaya", weight=3)  # ~2.8 min
-Mapa.add_edge("Tacubaya", "Juanacatlán", weight=3)  # ~2.6 min
-Mapa.add_edge("Juanacatlán", "Chapultepec", weight=2)  # ~2.2 min
-Mapa.add_edge("Chapultepec", "Sevilla", weight=1)  # ~1.1 min
-Mapa.add_edge("Sevilla", "Insurgentes", weight=2)  # ~1.6 min
-Mapa.add_edge("Insurgentes", "Cuauhtémoc", weight=2)  # ~1.9 min
-Mapa.add_edge("Cuauhtémoc", "Balderas", weight=1)  # ~1.1 min
+# definicion de lineas y pesos basados en gtfs oficial
+# los pesos representan minutos
 
+# linea 1 (rosa) observatorio - balderas
+Mapa.add_edge("Observatorio_L1", "Tacubaya_L1", weight=2.83)
+Mapa.add_edge("Tacubaya_L1", "Juanacatlan_L1", weight=2.56)
+Mapa.add_edge("Juanacatlan_L1", "Chapultepec_L1", weight=2.20)
+Mapa.add_edge("Chapultepec_L1", "Sevilla_L1", weight=1.12)
+Mapa.add_edge("Sevilla_L1", "Insurgentes_L1", weight=1.65)
+Mapa.add_edge("Insurgentes_L1", "Cuauhtemoc_L1", weight=1.85)
+Mapa.add_edge("Cuauhtemoc_L1", "Balderas_L1", weight=1.08)
 
-# Línea 3  (Universidad -> Juárez)
-Mapa.add_edge("Universidad", "Copilco", weight=3)  # ~2.6 min
-Mapa.add_edge("Copilco", "Miguel Ángel de Quevedo", weight=3)  # ~2.7 min
-Mapa.add_edge("Miguel Ángel de Quevedo", "Viveros", weight=2)  # ~1.8 min
-Mapa.add_edge("Viveros", "Coyoacán", weight=2)  # ~1.9 min
-Mapa.add_edge("Coyoacán", "Zapata", weight=2)  # ~2.3 min
-Mapa.add_edge("Zapata", "División del Norte", weight=2)  # ~1.9 min
-Mapa.add_edge("División del Norte", "Eugenia", weight=2)  # ~1.5 min
-Mapa.add_edge("Eugenia", "Etiopía", weight=2)  # ~2.0 min
-Mapa.add_edge("Etiopía", "Centro Médico", weight=2)  # ~2.4 min
-Mapa.add_edge("Centro Médico", "Hospital General", weight=1)  # ~1.4 min
-Mapa.add_edge("Hospital General", "Niños Héroes", weight=1)  # ~1.4 min
-Mapa.add_edge("Niños Héroes", "Balderas", weight=1)  # ~1.4 min
-Mapa.add_edge("Balderas", "Juárez", weight=1)  # ~1.4 min
+# linea 3 (verde oliva) universidad - juarez
+Mapa.add_edge("Juarez_L3", "Balderas_L3", weight=1.40)
+Mapa.add_edge("Balderas_L3", "Ninos Heroes_L3", weight=1.43)
+Mapa.add_edge("Ninos Heroes_L3", "Hospital General_L3", weight=1.42)
+Mapa.add_edge("Hospital General_L3", "Centro Medico_L3", weight=1.37)
+Mapa.add_edge("Centro Medico_L3", "Etiopia_L3", weight=2.40)
+Mapa.add_edge("Etiopia_L3", "Eugenia_L3", weight=1.98)
+Mapa.add_edge("Eugenia_L3", "Division del Norte_L3", weight=1.48)
+Mapa.add_edge("Division del Norte_L3", "Zapata_L3", weight=1.88)
+Mapa.add_edge("Zapata_L3", "Coyoacan_L3", weight=2.33)
+Mapa.add_edge("Coyoacan_L3", "Viveros_L3", weight=1.90)
+Mapa.add_edge("Viveros_L3", "Miguel Angel de Quevedo_L3", weight=1.80)
+Mapa.add_edge("Miguel Angel de Quevedo_L3", "Copilco_L3", weight=2.70)
+Mapa.add_edge("Copilco_L3", "Universidad_L3", weight=2.63)
 
+# linea 7 (naranja) barranca del muerto - polanco
+Mapa.add_edge("Polanco_L7", "Auditorio_L7", weight=1.40)
+Mapa.add_edge("Auditorio_L7", "Constituyentes_L7", weight=2.68)
+Mapa.add_edge("Constituyentes_L7", "Tacubaya_L7", weight=1.88)
+Mapa.add_edge("Tacubaya_L7", "San Pedro de los Pinos_L7", weight=2.01)
+Mapa.add_edge("San Pedro de los Pinos_L7", "San Antonio_L7", weight=1.28)
+Mapa.add_edge("San Antonio_L7", "Mixcoac_L7", weight=1.45)
+Mapa.add_edge("Mixcoac_L7", "Barranca del Muerto_L7", weight=2.66)
 
-# Línea 7 (Barranca del Muerto -> Polanco)
-Mapa.add_edge("Barranca del Muerto", "Mixcoac", weight=3)  # ~2.7 min
-Mapa.add_edge("Mixcoac", "San Antonio", weight=1)  # ~1.4 min
-Mapa.add_edge("San Antonio", "San Pedro de los Pinos", weight=1)  # ~1.3 min
-Mapa.add_edge("San Pedro de los Pinos", "Tacubaya", weight=2)  # ~2.0 min
-Mapa.add_edge("Tacubaya", "Constituyentes", weight=2)  # ~1.9 min
-Mapa.add_edge("Constituyentes", "Auditorio", weight=3)  # ~2.7 min
-Mapa.add_edge("Auditorio", "Polanco", weight=1)  # ~1.4 min
+# linea 9 (marron) tacubaya - lazaro cardenas
+Mapa.add_edge("Tacubaya_L9", "Patriotismo_L9", weight=2.78)
+Mapa.add_edge("Patriotismo_L9", "Chilpancingo_L9", weight=1.70)
+Mapa.add_edge("Chilpancingo_L9", "Centro Medico_L9", weight=2.28)
+Mapa.add_edge("Centro Medico_L9", "Lazaro Cardenas_L9", weight=1.87)
 
-# Línea 9  (Tacubaya -> Lázaro Cárdenas)
-Mapa.add_edge("Tacubaya", "Patriotismo", weight=2)  # ~2.5 min
-Mapa.add_edge("Patriotismo", "Chilpancingo", weight=2)  # ~1.8 min
-Mapa.add_edge("Chilpancingo", "Centro Médico", weight=2)  # ~2.3 min
-Mapa.add_edge("Centro Médico", "Lázaro Cárdenas", weight=2)  # ~2.0 min
+# linea 12 (oro) mixcoac - eje central
+Mapa.add_edge("Mixcoac_L12", "Insurgentes Sur_L12", weight=2.08)
+Mapa.add_edge("Insurgentes Sur_L12", "Hospital 20 de Noviembre_L12", weight=1.80)
+Mapa.add_edge("Hospital 20 de Noviembre_L12", "Zapata_L12", weight=1.28)
+Mapa.add_edge("Zapata_L12", "Parque de los Venados_L12", weight=1.67)
+Mapa.add_edge("Parque de los Venados_L12", "Eje Central_L12", weight=3.30)
 
-# Línea 12  (Mixcoac -> Eje Central)
-Mapa.add_edge("Mixcoac", "Insurgentes Sur", weight=2)  # ~2.1 min
-Mapa.add_edge("Insurgentes Sur", "Hospital 20 de Noviembre", weight=2)  # ~1.8 min
-Mapa.add_edge("Hospital 20 de Noviembre", "Zapata", weight=1)  # ~1.3 min
-Mapa.add_edge("Zapata", "Parque de los Venados", weight=2)  # ~1.7 min
-Mapa.add_edge("Parque de los Venados", "Eje Central", weight=3)  # ~3.3 min
+# transbordos permitidos
+# 1 mixcoac
+Mapa.add_edge("Mixcoac_L7", "Mixcoac_L12", weight=4.0)
+
+# 2 zapata
+Mapa.add_edge("Zapata_L3", "Zapata_L12", weight=3.5)
+
+# 3 tacubaya
+Mapa.add_edge("Tacubaya_L1", "Tacubaya_L7", weight=3.5)
+Mapa.add_edge("Tacubaya_L7", "Tacubaya_L9", weight=3.5)
+Mapa.add_edge("Tacubaya_L9", "Tacubaya_L1", weight=3.5)
+
+# 4 centro medico
+Mapa.add_edge("Centro Medico_L3", "Centro Medico_L9", weight=3.0)
+
+# 5 balderas
+Mapa.add_edge("Balderas_L1", "Balderas_L3", weight=2.5)

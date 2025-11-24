@@ -19,6 +19,9 @@ class MetroGUI(tk.Tk):
         # color de fondo de la ventana principal
         self.configure(bg="#2E2E2E")
 
+        # variable para guardar la ultima ruta y redibujarla al cambiar tamaño
+        self.last_path = None
+
         # configuracion del tema oscuro
         style = ttk.Style()
         style.theme_use("clam")
@@ -93,7 +96,8 @@ class MetroGUI(tk.Tk):
         result_frame.pack(fill=tk.BOTH, expand=True, pady=10)
 
         # un widget de texto para mostrar el recorrido completo
-        # bg oscuro y fg blanco para el tema, state disabled para que no se pueda escribir
+        # bg oscuro y fg blanco para el tema
+        # state disabled para que no se pueda escribir, solo seleccionar
         self.result_text = tk.Text(
             result_frame,
             width=40,
@@ -113,6 +117,7 @@ class MetroGUI(tk.Tk):
         self.result_text.config(yscrollcommand=scrollbar.set)
 
         # esto crea el canvas para mostrar el mapa del metro
+        # fondo oscuro para que no se note el hueco si la imagen no llena todo
         self.canvas = tk.Canvas(right_frame, bg="#2E2E2E", highlightthickness=0)
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
@@ -194,7 +199,8 @@ class MetroGUI(tk.Tk):
 
     def on_resize(self, event):
         # redibuja el mapa cuando se redimensiona la ventana
-        self.display_image()
+        # pasamos la ultima ruta guardada para que no se borre
+        self.display_image(self.last_path)
 
     def get_coords_safe(self, station_name):
         # metodo auxiliar para buscar coordenadas ignorando el nombre de la linea
@@ -223,9 +229,12 @@ class MetroGUI(tk.Tk):
         return None
 
     def write_result(self, text):
-        # funcion auxiliar para escribir en el cuadro de texto
+        # funcion auxiliar para escribir en el cuadro de texto de solo lectura
+        # habilitamos la escritura
         self.result_text.config(state="normal")
+        # escribimos al final
         self.result_text.insert(tk.END, text)
+        # deshabilitamos para que el usuario no pueda borrar
         self.result_text.config(state="disabled")
 
     def clear_result(self):
@@ -239,42 +248,35 @@ class MetroGUI(tk.Tk):
         if not hasattr(self, "original_image"):
             return
 
+        # creamos una copia de la imagen original para dibujar sobre ella
         img = self.original_image.copy()
 
-        # si hay una ruta, la dibujamos en ROJO sobre el mapa
         if path and len(path) > 1:
+            # ... (codigo de dibujo de lineas y circulos igual que antes) ...
             draw = ImageDraw.Draw(img)
-
-            # dibujamos las lineas de la ruta EN ROJO
             for i in range(len(path) - 1):
                 estacion1 = path[i]
                 estacion2 = path[i + 1]
-
                 coord1 = self.get_coords_safe(estacion1)
                 coord2 = self.get_coords_safe(estacion2)
-
                 if coord1 and coord2:
                     if coord1 != coord2:
                         x1, y1 = coord1
                         x2, y2 = coord2
                         draw.line([(x1, y1), (x2, y2)], fill="#FF0000", width=8)
-
-            # dibujamos circulos en cada estacion
             for estacion in path:
                 coord = self.get_coords_safe(estacion)
                 if coord:
                     x, y = coord
                     radio = 10
-
                     if estacion == path[0]:
-                        color = "#00FF00"  # Verde
+                        color = "#00FF00"
                     elif estacion == path[-1]:
-                        color = "#0000FF"  # Azul
+                        color = "#0000FF"
                     elif "_" in estacion and path.count(estacion.split("_")[0]) > 0:
-                        color = "#FFA500"  # Naranja (transbordo)
+                        color = "#FFA500"
                     else:
-                        color = "#FF0000"  # Rojo
-
+                        color = "#FF0000"
                     draw.ellipse(
                         [x - radio, y - radio, x + radio, y + radio],
                         fill=color,
@@ -282,7 +284,7 @@ class MetroGUI(tk.Tk):
                         width=3,
                     )
 
-        # redimensiona la imagen para ajustar al canvas
+        # REDIMENSIONADO Y CENTRADO
         canvas_width = self.canvas.winfo_width()
         canvas_height = self.canvas.winfo_height()
 
@@ -299,30 +301,48 @@ class MetroGUI(tk.Tk):
 
             img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
+            # calculamos las coordenadas para centrar
+            x_center = (canvas_width - new_width) // 2
+            y_center = (canvas_height - new_height) // 2
+        else:
+            x_center, y_center = 0, 0
+
         self.photo = ImageTk.PhotoImage(img)
         self.canvas.delete("all")
-        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.photo)
+        # dibujamos centrada usando las coordenadas calculadas
+        self.canvas.create_image(x_center, y_center, anchor=tk.NW, image=self.photo)
 
     def mostrar_inputs(self):
+        # esto es la funcion que funciona cuando el usuario pulsa el boton
         origen = self.entry_origen.get()
         destino = self.entry_destino.get()
 
+        # actualizar etiquetas
         self.output_estacion_orig.config(text=f"Origen: {origen}")
         self.output_estacion_dest.config(text=f"Destino: {destino}")
-        self.clear_result()
 
+        # limpiar resultados anteriores
+        self.clear_result()
+        self.last_path = None  # reseteamos el path guardado
+
+        # validar entrada
         if not origen or not destino:
             self.write_result("⚠️ Por favor introduzca ambas estaciones.\n")
             self.display_image()
             return
 
         # buscar la ruta usando el algoritmo
+        # path contiene la lista de estaciones
+        # length es el tiempo en minutos
         path, length = calcular_ruta(origen, destino)
 
+        # guardamos el path para el redibujado al redimensionar
+        self.last_path = path
+
         if isinstance(path, str) or path is None:
-            self.write_result(
-                f"No se encontró una ruta entre:\n   '{origen}' y '{destino}'\n\n"
-            )
+            self.write_result(f"No se encontró una ruta entre:\n")
+            self.write_result(f"   '{origen}' y '{destino}'\n\n")
+            # si hay mensaje de error lo mostramos
             if isinstance(path, str):
                 self.write_result(f"{path}\n")
             self.display_image()
@@ -335,8 +355,12 @@ class MetroGUI(tk.Tk):
 
         self.write_result(f"Origen: {origen}\n")
         self.write_result(f"Destino: {destino}\n")
+        # mostramos el tiempo con un decimal
         self.write_result(f"Tiempo Estimado: {length:.1f} minutos\n")
-        self.write_result(f"Numero de Estaciones: {len(path)}\n\n")
+        # restamos 1 para contar trayectos, no nodos totales (origen no cuenta como parada de viaje)
+        num_paradas = len(path) - 1 if len(path) > 0 else 0
+        self.write_result(f"Numero de Estaciones: {num_paradas}\n\n")
+
         self.write_result("RECORRIDO:\n")
         self.write_result("-" * 35 + "\n")
 
@@ -347,7 +371,7 @@ class MetroGUI(tk.Tk):
                 parts = station_node.split("_")
                 display_name = f"{parts[0]} ({parts[1].replace('L','Línea ')})"
 
-            # detectar transbordo
+            # detectar transbordo para mostrar en texto
             prefix = ""
             if i > 1:
                 prev_node = path[i - 2]
@@ -357,6 +381,7 @@ class MetroGUI(tk.Tk):
                 )
                 if prev_name == curr_name:
                     prefix = " -> TRANSBORDO -> "
+                    # imprimimos linea de transbordo
                     self.write_result(f"   {prefix}{display_name}\n")
                     continue
 
@@ -367,6 +392,7 @@ class MetroGUI(tk.Tk):
             else:
                 self.write_result(f" {i:2d}. {display_name}\n")
 
+        # mostrar en el mapa con la ruta en ROJO
         self.display_image(path)
 
 

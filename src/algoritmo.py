@@ -4,8 +4,8 @@ from .h import h
 
 
 def buscar_nodo_inicial(nombre_input):
-    # Busca un nodo en el grafo que coincida con el nombre del usuario
-    # Ej: Si usuario pone "Tacubaya", devuelve "Tacubaya_L1" (el primero que pille)
+    # busca un nodo en el grafo que coincida con el nombre del usuario
+    # ej si usuario pone tacubaya devuelve tacubaya_l1 el primero que pille
     for nodo in Mapa.nodes():
         if nombre_input.lower() in nodo.lower():
             return nodo
@@ -13,12 +13,11 @@ def buscar_nodo_inicial(nombre_input):
 
 
 def calcular_ruta(origen_txt, destino_txt):
-    """
-    Ejecuta A* y devuelve (camino, tiempo_total).
-    Si hay error devuelve (mensaje_error, None).
-    """
+    # ejecuta a estrella y devuelve camino y tiempo total
+    # si hay error devuelve mensaje de error y none
+
     nodo_inicio = buscar_nodo_inicial(origen_txt)
-    # Buscamos un nodo concreto del destino para usarlo de referencia en la heurística
+    # buscamos un nodo concreto del destino para usarlo de referencia en la heuristica
     nodo_destino_ref = buscar_nodo_inicial(destino_txt)
 
     if not nodo_inicio:
@@ -26,7 +25,7 @@ def calcular_ruta(origen_txt, destino_txt):
     if not nodo_destino_ref:
         return f"Error: No encuentro la estación '{destino_txt}'", None
 
-    # Inicialización A*
+    # inicializacion a estrella
     g_puntuacion = {nodo: float("inf") for nodo in Mapa.nodes()}
     g_puntuacion[nodo_inicio] = 0
 
@@ -38,7 +37,7 @@ def calcular_ruta(origen_txt, destino_txt):
         f_puntuacion[nodo_inicio] = 0
 
     cola = []
-    # Heapq ordena por el primer elemento de la tupla (f_score)
+    # heapq ordena por el primer elemento de la tupla f_score
     heapq.heappush(cola, (f_puntuacion[nodo_inicio], nodo_inicio))
 
     came_from = {}
@@ -47,8 +46,8 @@ def calcular_ruta(origen_txt, destino_txt):
     while cola:
         _, actual = heapq.heappop(cola)
 
-        # Comprobar si hemos llegado al destino (ignorando sufijo de línea)
-        # Ej: Si estamos en "Pantitlán_L9" y el destino es "Pantitlán", éxito.
+        # comprobar si hemos llegado al destino ignorando sufijo de linea
+        # ej si estamos en pantitlan_l9 y el destino es pantitlan exito
         nombre_actual_limpio = actual.split("_")[0] if "_" in actual else actual
         if destino_txt.lower() in nombre_actual_limpio.lower():
             camino = reconstruir_camino(came_from, actual)
@@ -67,7 +66,7 @@ def calcular_ruta(origen_txt, destino_txt):
                 came_from[vecino] = actual
                 g_puntuacion[vecino] = g_tentativo
 
-                # Calculamos h hacia el nodo de referencia del destino
+                # calculamos h hacia el nodo de referencia del destino
                 coste_h = h(vecino, nodo_destino_ref)
 
                 f_puntuacion[vecino] = g_tentativo + coste_h

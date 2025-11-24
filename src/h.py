@@ -1,49 +1,41 @@
-"""Heurística h(n) para A* en el Metro de CDMX.
-
-La tabla heurística se autogenera desde el grafo `Mapa` (grafo.py) con los pesos
-actuales, por lo que permanece alineada si cambian los weights del grafo.
-
-"""
-
-from typing import Dict
-
 import networkx as nx
-from .grafo import Mapa  # Grafo con pesos 'weight' declarado en grafo.py
+from typing import Dict
+from .grafo import Mapa
 
 
-def build_heuristic_table(grafo: nx.Graph) -> Dict[str, Dict[str, int]]:
-    """
-    Calcula los costes mínimos (sumas de 'weight') entre todas las estaciones del grafo.
-    Se recorre el resultado de all_pairs_dijkstra_path_length y se arma el diccionario a mano.
-    """
-    tabla: Dict[str, Dict[str, int]] = {}
+# Construimos la tabla de heurísticas precalculando caminos mínimos reales (Dijkstra)
+def build_heuristic_table(grafo: nx.Graph) -> Dict[str, Dict[str, float]]:
+    tabla: Dict[str, Dict[str, float]] = {}
 
+    # Usamos weight="weight" para que la heurística sea admisible y consistente
+    # (coste real mínimo posible entre dos nodos)
     for origen, distancias in nx.all_pairs_dijkstra_path_length(grafo, weight="weight"):
         tabla[origen] = {}
         for destino, coste in distancias.items():
             if destino == origen:
                 continue
-            tabla[origen][destino] = int(coste)
+            tabla[origen][destino] = float(coste)
 
     return tabla
 
 
-m: Dict[str, Dict[str, int]] = build_heuristic_table(Mapa)
+# Variable global con la tabla precalculada
+m = build_heuristic_table(Mapa)
 
 
-def h(c: str, t: str) -> int:
+def h(c: str, t: str) -> float:
     """
-    Heurística h(n) para A*: coste estimado mínimo entre `c` y `t` usando la tabla precalculada.
+    Devuelve la heurística h(n) estimada desde el nodo c hasta el objetivo t.
+    Al usar Dijkstra sobre el grafo estático, h(n) = coste real óptimo,
+    lo que garantiza que A* encuentre la solución óptima.
     """
     if c == t:
-        return 0
+        return 0.0
 
     if c not in m:
-        raise KeyError(c)
+        return 0.0  # Si no está en la tabla, devolvemos 0 (como Dijkstra)
 
-    destinos = m[c]
+    if t not in m[c]:
+        return 0.0  # Si no hay camino conocido en la tabla
 
-    if t not in destinos:
-        raise KeyError(t)
-
-    return destinos[t]
+    return m[c][t]

@@ -16,6 +16,8 @@ class MetroGUI(tk.Tk):
         self.title("Metro de Ciudad de México App")
         # tamaño del GUI mas pequeño para que el mapa no sea gigante
         self.geometry("1100x700")
+        # deshabilitar redimensionado de ventana
+        self.resizable(False, False)
         # color de fondo de la ventana principal
         self.configure(bg="#2E2E2E")
 
@@ -350,6 +352,13 @@ class MetroGUI(tk.Tk):
         # validar entrada
         if not origen or not destino:
             self.write_result("⚠️ Por favor introduzca ambas estaciones.\n")
+            self.display_image()
+            return
+
+        if origen == destino:
+            self.write_result("El origen y destino no pueden ser iguales.\n")
+            self.output_estacion_orig.config(text="")
+            self.output_estacion_dest.config(text="")
             self.display_image()
             return
 

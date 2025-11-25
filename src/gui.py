@@ -348,8 +348,12 @@ class MetroGUI(tk.Tk):
         self.last_path = None  # reseteamos el path guardado
 
         # validar entrada
-        if not origen or not destino:
-            self.write_result("⚠️ Por favor introduzca ambas estaciones.\n")
+        placeholder_origen = "-- Seleccione origen --"
+        placeholder_destino = "-- Seleccione destino --"
+        if not origen or not destino or origen == placeholder_origen or destino == placeholder_destino:
+            self.write_result("Por favor seleccione ambas estaciones.\n")
+            self.output_estacion_orig.config(text="")
+            self.output_estacion_dest.config(text="")
             self.display_image()
             return
 

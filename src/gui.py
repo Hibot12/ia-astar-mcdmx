@@ -11,7 +11,25 @@ class MetroGUI(tk.Tk):
         #tamaño del GUI
         self.geometry("1024x1024")
 
-        #Esto crea el contenedor principal con dos columnas left y right
+        # estilo para las entradas de texto
+        style.configure(
+            "TEntry", fieldbackground="#404040", foreground="white", insertcolor="white"
+        )
+
+        #esto es la lista de las estaciones para selecionar origen y destino
+        self.estaciones_lista = sorted([
+            "Polanco", "Auditorio", "Constituyentes", "Tacubaya",
+            "San Pedro de los Pinos", "San Antonio", "Mixcoac",
+            "Barranca del Muerto", "Insurgentes Sur", "Hospital 20 de Noviembre",
+            "Zapata", "Patriotismo", "Chilpancingo", "Centro Medico",
+            "Lazaro Cardenas", "Observatorio", "Juanacatlan", "Chapultepec",
+            "Sevilla", "Insurgentes", "Cuauhtemoc", "Balderas", "Juarez",
+            "Niños Héroes", "Hospital General", "Etiopia", "Eugenia",
+            "Division del Norte", "Coyoacan", "Viveros", "Miguel Ángel de Quevedo",
+            "Copilco", "Universidad", "Parque de los Venados", "Eje Central"
+        ])
+
+        # esto crea el contenedor principal con dos columnas left y right
         main_frame = ttk.Frame(self)
         main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
@@ -28,13 +46,21 @@ class MetroGUI(tk.Tk):
         self.estacion_orig_label.pack(pady=10)
         self.estacion_dest_label = ttk.Label(self, text="Introduzca la estacion de Destino:")
         self.estacion_orig_label.pack(pady=10)
-
-        #Esto son las entradas de texto(uno para origen y otro para el destino)
-        self.entry_origen = ttk.Entry(self, width=30)
+        #esto antes era escribir a mano y te equivocabas por las tildes o espacios
+        #mucho mejor selecionar
+        # esto son las entradas, que seleciona el usuario (uno para origen y otro para el destino)
+        self.entry_origen = ttk.Combobox(left_frame, values=self.estaciones_lista, width=28, state="readonly")
         self.entry_origen.pack(pady=5)
+        self.entry_origen.set("-- Seleccione origen --")
 
-        self.entry_destino = ttk.Entry(self, width=30)
+        self.estacion_dest_label = ttk.Label(
+            left_frame, text="Introduzca la estacion de Destino:"
+        )
+        self.estacion_dest_label.pack(pady=10)
+
+        self.entry_destino = ttk.Combobox(left_frame, values=self.estaciones_lista, width=28, state="readonly")
         self.entry_destino.pack(pady=5)
+        self.entry_destino.set("-- Seleccione destino --")
 
         #Esto es el boton para demostrar lo que el usuario esta escribiendo
         self.boton = ttk.Button(self, text="Buscar la ruta", command=self.mostrar_inputs)
@@ -70,41 +96,45 @@ class MetroGUI(tk.Tk):
         #Esto son las coordenadas exactas con respecto a la imagen del metro
         # ------- NOOOO TOCAR !!!!!!!!!!!!! -------------
         self.coords_estacion = {
-            "Tacubaya": (179, 305),
-            "San Pedro de los Pinos": (178, 371),
-            "San Antonio": (179, 411),
-            "Mixcoac": (179, 464),
-            "Barranca del Muerto": (179, 529),
+            "Polanco": (179, 90),   #linea 7
+            "Auditorio": (179, 165),
             "Constituyentes": (179, 236),
-            "Auditorio": (178, 165),
-            "Polanco": (178, 90),
-            "Observatorio": (136, 349),
-            "Patriotismo": (269, 305),
-            "Chilpancingo": (372, 305),
-            "Lazaro Cardenas": (542, 305),  
-            "Juanacatlan": (220, 263),  
+            "Tacubaya": (179, 303),
+            "San Pedro de los Pinos": (179, 371),
+            "San Antonio": (179, 411),
+            "Mixcoac": (179, 461),
+            "Barranca del Muerto": (179, 529),
+
+            "Insurgentes Sur": (250, 461), #linea 12
+            "Hospital 20 de Noviembre": (336, 461),
+            "Zapata": (436, 461),
+
+            "Patriotismo": (269, 303), #linea 9
+            "Chilpancingo": (372, 303),
+            "Centro Medico": (436, 303),
+            "Lazaro Cardenas": (542, 303),
+
+            "Observatorio": (136, 349), #linea 1
+            "Juanacatlan": (220, 263),
             "Chapultepec": (257, 226),
             "Sevilla": (299, 185),
             "Insurgentes": (341, 151),
-            "Cuauhtemoc": (386, 150), 
+            "Cuauhtemoc": (386, 150),  # Sin tilde
             "Balderas": (436, 151),
-            "Juarez": (436, 78),  
-            "Niños Héroes": (436, 187),  
-            "Hospital General": (437, 230),
-            "Centro Medico": (436, 304), 
-            "Etiopia": (437, 345),  
+            "Juarez": (436, 78),
+            "Niños Héroes": (436, 187),
+            "Hospital General": (436, 230),
+
+            "Etiopia": (436, 345),
             "Eugenia": (436, 382),
-            "Division del Norte": (437, 422), 
-            "Zapata": (436, 463),
-            "Coyoacan": (437, 501),  
-            "Viveros": (437, 542),
-            "Miguel Ángel de Quevedo": (436, 580),  
-            "Copilco": (437, 619),
-            "Universidad": (437, 658),
-            "Parque de los Venados": (535, 461),
+            "Division del Norte": (436, 422),
+            "Coyoacan": (436, 501),
+            "Viveros": (436, 542),
+            "Miguel Ángel de Quevedo": (436, 580),
+            "Copilco": (436, 619),
+            "Universidad": (436, 658),
+            "Parque de los Venados": (535, 464),
             "Eje Central": (596, 553),
-            "Insurgentes Sur": (250, 460),
-            "Hospital 20 de Noviembre": (336, 463),
         }
         # ------- NOOOO TOCAR !!!!!!!!!!!!! -------------
 

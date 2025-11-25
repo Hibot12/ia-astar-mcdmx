@@ -164,10 +164,12 @@ class MetroGUI(tk.Tk):
             "Observatorio": (136, 349), #linea 1
             "Juanacatlan": (220, 263),
             "Chapultepec": (257, 226),
-            "Sevilla": (299, 185),
-            "Insurgentes": (341, 151),
-            "Cuauhtemoc": (386, 150),  # Sin tilde
+            "Sevilla": (296, 185),
+            "Insurgentes": (332, 151),
+            "Cuauhtemoc": (386, 150),  
             "Balderas": (436, 151),
+
+
             "Juarez": (436, 78),
             "Niños Héroes": (436, 187),
             "Hospital General": (436, 230),

@@ -164,10 +164,12 @@ class MetroGUI(tk.Tk):
             "Observatorio": (136, 349), #linea 1
             "Juanacatlan": (220, 263),
             "Chapultepec": (257, 226),
-            "Sevilla": (299, 185),
-            "Insurgentes": (341, 151),
-            "Cuauhtemoc": (386, 150),  # Sin tilde
+            "Sevilla": (296, 185),
+            "Insurgentes": (332, 151),
+            "Cuauhtemoc": (386, 150),  
             "Balderas": (436, 151),
+
+
             "Juarez": (436, 78),
             "Niños Héroes": (436, 187),
             "Hospital General": (436, 230),
@@ -184,6 +186,8 @@ class MetroGUI(tk.Tk):
             "Eje Central": (596, 553),
         }
         # ------- NOOOO TOCAR (owner: Gaythier) !!!!!!!!!!!!! -------------
+        # esto carga el mapa del metro
+        self.load_metro_map()
 
     def load_metro_map(self):
         # este codigo carga el mapa del metro en el GUI
@@ -264,7 +268,7 @@ class MetroGUI(tk.Tk):
         #esta funcion muestra el mapa del metro con la ruta
         #si no tiene la imagen original return
         if not hasattr(self, 'original_image'):
-            raise Exception("Invalid state")
+            return
         
         #Creamos una copia de la imagen original
         img = self.original_image.copy()

@@ -15,40 +15,40 @@ class MetroPathFinder:
         # Coordenadas EXACTAS obtenidas por el usuario haciendo clic en la imagen
         self.coords_estacion = {
             "Tacubaya": (179, 305),
-            "San Pedro de los Pinos": (178, 371),
+            "San Pedro de los Pinos": (179, 371),
             "San Antonio": (179, 411),
             "Mixcoac": (179, 464),
             "Barranca del Muerto": (179, 529),
             "Constituyentes": (179, 236),
-            "Auditorio": (178, 165),
-            "Polanco": (178, 90),
+            "Auditorio": (179, 165),
+            "Polanco": (179, 90),
             "Observatorio": (136, 349),
             "Patriotismo": (269, 305),
             "Chilpancingo": (372, 305),
-            "Lazaro Cardenas": (542, 305),  # Sin tilde como lo guardó el usuario
-            "Juanacatlan": (220, 263),  # Sin tilde
+            "Lazaro Cardenas": (542, 305),
+            "Juanacatlan": (220, 263),
             "Chapultepec": (257, 226),
             "Sevilla": (299, 185),
             "Insurgentes": (341, 151),
-            "Cuauhtemoc": (386, 150),  # Sin tilde
+            "Cuauhtemoc": (386, 151),
             "Balderas": (436, 151),
-            "Juarez": (436, 78),  # Sin tilde
-            "Niños Héroes": (436, 187),  # Con tilde como lo guardó el usuario
-            "Hospital General": (437, 230),
-            "Centro Medico": (436, 304),  # Sin tilde
-            "Etiopia": (437, 345),  # Sin tilde
+            "Juarez": (436, 78),
+            "Niños Héroes": (436, 187),
+            "Hospital General": (436, 230),
+            "Centro Medico": (436, 305),
+            "Etiopia": (436, 345),
             "Eugenia": (436, 382),
-            "Division del Norte": (437, 422),  # Sin tilde
-            "Zapata": (436, 463),
-            "Coyoacan": (437, 501),  # Sin tilde
-            "Viveros": (437, 542),
-            "Miguel Ángel de Quevedo": (436, 580),  # Con tildes
-            "Copilco": (437, 619),
-            "Universidad": (437, 658),
-            "Parque de los Venados": (535, 461),
+            "Division del Norte": (436, 422),
+            "Zapata": (436, 464),
+            "Coyoacan": (436, 501),
+            "Viveros": (436, 542),
+            "Miguel Ángel de Quevedo": (436, 580),
+            "Copilco": (436, 619),
+            "Universidad": (436, 658),
+            "Parque de los Venados": (535, 464),
             "Eje Central": (596, 553),
-            "Insurgentes Sur": (250, 460),
-            "Hospital 20 de Noviembre": (336, 463),
+            "Insurgentes Sur": (250, 464),
+            "Hospital 20 de Noviembre": (336, 464),
         }
     
     def _build_network(self):

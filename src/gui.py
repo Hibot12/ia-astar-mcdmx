@@ -7,7 +7,7 @@ class MetroGUI(tk.Tk):
         #inicializamos la ventana de tkinter
         super().__init__()
         #titulo del la GUI de la applicacion
-        self.title("Metro Mexico Applicacion")
+        self.title("Metro de Ciudad de México App")
         #tamaño del GUI
         self.geometry("1024x1024")
 
@@ -94,7 +94,7 @@ class MetroGUI(tk.Tk):
         self.load_metro_map()
 
         #Esto son las coordenadas exactas con respecto a la imagen del metro
-        # ------- NOOOO TOCAR !!!!!!!!!!!!! -------------
+        # ------- NOOOO TOCAR (owner: Gaythier) !!!!!!!!!!!!! -------------
         self.coords_estacion = {
             "Polanco": (179, 90),   #linea 7
             "Auditorio": (179, 165),
@@ -136,11 +136,8 @@ class MetroGUI(tk.Tk):
             "Parque de los Venados": (535, 464),
             "Eje Central": (596, 553),
         }
-        # ------- NOOOO TOCAR !!!!!!!!!!!!! -------------
+        # ------- NOOOO TOCAR (owner: Gaythier) !!!!!!!!!!!!! -------------
 
-
-
-    
     def load_metro_map(self):
         #este codigo mete el mapa del metro en el GUI
         try:
@@ -153,7 +150,7 @@ class MetroGUI(tk.Tk):
         #esta funcion muestra el mapa del metro con la ruta
         #si no tiene la imagen original return
         if not hasattr(self, 'original_image'):
-            return
+            raise Exception("Invalid state")
         
         #Creamos una copia de la imagen original
         img = self.original_image.copy()
@@ -224,17 +221,6 @@ class MetroGUI(tk.Tk):
         self.canvas.delete("all")
         #Dibujamos la nueva imagen en el canvas en la posición (0, 0)
         self.canvas.create_image(0, 0, anchor=tk.NW, image=self.photo)
-        
-    """    
-    def mostrar_inputs(self):
-        #esto es la funcion que funciona cuando el usuario pulsa el boton
-        origen = self.entry_origen.get()
-        destino = self.entry_destino.get()
-
-        #
-        self.output_estacion_orig.config(text=f"Origen: {origen}")
-        self.output_estacion_dest.config(text=f"Destino: {destino}")
-    """
 
     def mostrar_inputs(self):
         """Esto es la funcion que funciona cuando el usuario pulsa el boton"""

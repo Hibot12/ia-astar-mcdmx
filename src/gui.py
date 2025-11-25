@@ -141,7 +141,7 @@ class MetroGUI(tk.Tk):
         self.canvas.bind("<Configure>", self.on_resize)
 
         #Esto son las coordenadas exactas con respecto a la imagen del metro
-        # ------- NOOOO TOCAR (owner: Gauthier) !!!!!!!!!!!!! -------------
+        # ------- NOOOO TOCAR (owner: Gaythier) !!!!!!!!!!!!! -------------
         self.coords_estacion = {
             "Polanco": (179, 90),   #linea 7
             "Auditorio": (179, 165),
@@ -185,7 +185,7 @@ class MetroGUI(tk.Tk):
             "Parque de los Venados": (535, 464),
             "Eje Central": (596, 553),
         }
-        # ------- NOOOO TOCAR (owner: Gauthier) !!!!!!!!!!!!! -------------
+        # ------- NOOOO TOCAR (owner: Gaythier) !!!!!!!!!!!!! -------------
         # esto carga el mapa del metro
         self.load_metro_map()
 

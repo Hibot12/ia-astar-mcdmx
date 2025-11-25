@@ -43,6 +43,27 @@ class MetroGUI(tk.Tk):
             "TEntry", fieldbackground="#404040", foreground="white", insertcolor="white"
         )
 
+        # estilo para los combobox (selectores de estaciones)
+        style.configure(
+            "TCombobox",
+            fieldbackground="#404040",
+            background="#404040",
+            foreground="white",
+            arrowcolor="white",
+            selectbackground="#555555",
+            selectforeground="white"
+        )
+        style.map("TCombobox",
+            fieldbackground=[("readonly", "#404040")],
+            selectbackground=[("readonly", "#555555")],
+            selectforeground=[("readonly", "white")]
+        )
+        # estilo para la lista desplegable del combobox
+        self.option_add("*TCombobox*Listbox.background", "#404040")
+        self.option_add("*TCombobox*Listbox.foreground", "white")
+        self.option_add("*TCombobox*Listbox.selectBackground", "#555555")
+        self.option_add("*TCombobox*Listbox.selectForeground", "white")
+
         #esto es la lista de las estaciones para selecionar origen y destino
         self.estaciones_lista = sorted([
             "Polanco", "Auditorio", "Constituyentes", "Tacubaya",
@@ -208,6 +229,15 @@ class MetroGUI(tk.Tk):
             for path in possible_paths:
                 if os.path.exists(path):
                     self.original_image = Image.open(path)
+                    # ajustar ventana al tamaño de la imagen
+                    img_width = self.original_image.width
+                    img_height = self.original_image.height
+                    # ancho = menu (~350) + padding + imagen + padding
+                    window_width = 350 + img_width
+                    window_height = img_height + 40
+                    self.geometry(f"{window_width}x{window_height}")
+                    # deshabilitar redimensionado
+                    self.resizable(False, False)
                     self.display_image()
                     image_loaded = True
                     break
@@ -323,16 +353,16 @@ class MetroGUI(tk.Tk):
 
             img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
-            # calculamos las coordenadas para centrar
-            x_center = (canvas_width - new_width) // 2
-            y_center = (canvas_height - new_height) // 2
+            # alineamos a la izquierda, centrado vertical
+            x_pos = 0
+            y_pos = (canvas_height - new_height) // 2
         else:
-            x_center, y_center = 0, 0
+            x_pos, y_pos = 0, 0
 
         self.photo = ImageTk.PhotoImage(img)
         self.canvas.delete("all")
-        # dibujamos centrada usando las coordenadas calculadas
-        self.canvas.create_image(x_center, y_center, anchor=tk.NW, image=self.photo)
+        # dibujamos alineada a la izquierda
+        self.canvas.create_image(x_pos, y_pos, anchor=tk.NW, image=self.photo)
 
     def mostrar_inputs(self):
         # esto es la funcion que funciona cuando el usuario pulsa el boton
@@ -348,8 +378,12 @@ class MetroGUI(tk.Tk):
         self.last_path = None  # reseteamos el path guardado
 
         # validar entrada
-        if not origen or not destino:
-            self.write_result("⚠️ Por favor introduzca ambas estaciones.\n")
+        placeholder_origen = "-- Seleccione origen --"
+        placeholder_destino = "-- Seleccione destino --"
+        if not origen or not destino or origen == placeholder_origen or destino == placeholder_destino:
+            self.write_result("Por favor seleccione ambas estaciones.\n")
+            self.output_estacion_orig.config(text="")
+            self.output_estacion_dest.config(text="")
             self.display_image()
             return
 

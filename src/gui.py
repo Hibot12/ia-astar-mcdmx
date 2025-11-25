@@ -141,7 +141,7 @@ class MetroGUI(tk.Tk):
         self.canvas.bind("<Configure>", self.on_resize)
 
         #Esto son las coordenadas exactas con respecto a la imagen del metro
-        # ------- NOOOO TOCAR (owner: Gaythier) !!!!!!!!!!!!! -------------
+        # ------- NOOOO TOCAR (owner: Gauthier) !!!!!!!!!!!!! -------------
         self.coords_estacion = {
             "Polanco": (179, 90),   #linea 7
             "Auditorio": (179, 165),
@@ -183,7 +183,9 @@ class MetroGUI(tk.Tk):
             "Parque de los Venados": (535, 464),
             "Eje Central": (596, 553),
         }
-        # ------- NOOOO TOCAR (owner: Gaythier) !!!!!!!!!!!!! -------------
+        # ------- NOOOO TOCAR (owner: Gauthier) !!!!!!!!!!!!! -------------
+        # esto carga el mapa del metro
+        self.load_metro_map()
 
     def load_metro_map(self):
         # este codigo carga el mapa del metro en el GUI
@@ -264,7 +266,7 @@ class MetroGUI(tk.Tk):
         #esta funcion muestra el mapa del metro con la ruta
         #si no tiene la imagen original return
         if not hasattr(self, 'original_image'):
-            raise Exception("Invalid state")
+            return
         
         #Creamos una copia de la imagen original
         img = self.original_image.copy()

@@ -13,7 +13,7 @@ class MetroGUI(tk.Tk):
         # inicializamos la ventana de tkinter
         super().__init__()
         # titulo del la GUI de la applicacion
-        self.title("Metro Mexico Applicacion")
+        self.title("Metro de Ciudad de México App")
         # tamaño del GUI mas pequeño para que el mapa no sea gigante
         self.geometry("1100x700")
         # color de fondo de la ventana principal
@@ -43,6 +43,19 @@ class MetroGUI(tk.Tk):
             "TEntry", fieldbackground="#404040", foreground="white", insertcolor="white"
         )
 
+        #esto es la lista de las estaciones para selecionar origen y destino
+        self.estaciones_lista = sorted([
+            "Polanco", "Auditorio", "Constituyentes", "Tacubaya",
+            "San Pedro de los Pinos", "San Antonio", "Mixcoac",
+            "Barranca del Muerto", "Insurgentes Sur", "Hospital 20 de Noviembre",
+            "Zapata", "Patriotismo", "Chilpancingo", "Centro Medico",
+            "Lazaro Cardenas", "Observatorio", "Juanacatlan", "Chapultepec",
+            "Sevilla", "Insurgentes", "Cuauhtemoc", "Balderas", "Juarez",
+            "Niños Héroes", "Hospital General", "Etiopia", "Eugenia",
+            "Division del Norte", "Coyoacan", "Viveros", "Miguel Ángel de Quevedo",
+            "Copilco", "Universidad", "Parque de los Venados", "Eje Central"
+        ])
+
         # esto crea el contenedor principal con dos columnas left y right
         main_frame = ttk.Frame(self)
         main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
@@ -60,18 +73,21 @@ class MetroGUI(tk.Tk):
             left_frame, text="Introduzca la estacion de Origen:"
         )
         self.estacion_orig_label.pack(pady=10)
-
-        # esto son las entradas de texto (uno para origen y otro para el destino)
-        self.entry_origen = ttk.Entry(left_frame, width=30)
+        #esto antes era escribir a mano y te equivocabas por las tildes o espacios
+        #mucho mejor selecionar
+        # esto son las entradas, que seleciona el usuario (uno para origen y otro para el destino)
+        self.entry_origen = ttk.Combobox(left_frame, values=self.estaciones_lista, width=28, state="readonly")
         self.entry_origen.pack(pady=5)
+        self.entry_origen.set("-- Seleccione origen --")
 
         self.estacion_dest_label = ttk.Label(
             left_frame, text="Introduzca la estacion de Destino:"
         )
         self.estacion_dest_label.pack(pady=10)
 
-        self.entry_destino = ttk.Entry(left_frame, width=30)
+        self.entry_destino = ttk.Combobox(left_frame, values=self.estaciones_lista, width=28, state="readonly")
         self.entry_destino.pack(pady=5)
+        self.entry_destino.set("-- Seleccione destino --")
 
         # esto es el boton para demostrar lo que el usuario esta escribiendo
         self.boton = ttk.Button(
@@ -124,49 +140,50 @@ class MetroGUI(tk.Tk):
         # bind para redimensionar
         self.canvas.bind("<Configure>", self.on_resize)
 
-        # esto son las coordenadas exactas con respecto a la imagen del metro
-        # ------- NOOOO TOCAR !!!!!!!!!!!!! -------------
+        #Esto son las coordenadas exactas con respecto a la imagen del metro
+        # ------- NOOOO TOCAR (owner: Gaythier) !!!!!!!!!!!!! -------------
         self.coords_estacion = {
-            "Tacubaya": (179, 305),
-            "San Pedro de los Pinos": (178, 371),
-            "San Antonio": (179, 411),
-            "Mixcoac": (179, 464),
-            "Barranca del Muerto": (179, 529),
+            "Polanco": (179, 90),   #linea 7
+            "Auditorio": (179, 165),
             "Constituyentes": (179, 236),
-            "Auditorio": (178, 165),
-            "Polanco": (178, 90),
-            "Observatorio": (136, 349),
-            "Patriotismo": (269, 305),
-            "Chilpancingo": (372, 305),
-            "Lazaro Cardenas": (542, 305),  # Sin tilde como lo guardó el usuario
-            "Juanacatlan": (220, 263),  # Sin tilde
+            "Tacubaya": (179, 303),
+            "San Pedro de los Pinos": (179, 371),
+            "San Antonio": (179, 411),
+            "Mixcoac": (179, 461),
+            "Barranca del Muerto": (179, 529),
+
+            "Insurgentes Sur": (250, 461), #linea 12
+            "Hospital 20 de Noviembre": (336, 461),
+            "Zapata": (436, 461),
+
+            "Patriotismo": (269, 303), #linea 9
+            "Chilpancingo": (372, 303),
+            "Centro Medico": (436, 303),
+            "Lazaro Cardenas": (542, 303),
+
+            "Observatorio": (136, 349), #linea 1
+            "Juanacatlan": (220, 263),
             "Chapultepec": (257, 226),
             "Sevilla": (299, 185),
             "Insurgentes": (341, 151),
             "Cuauhtemoc": (386, 150),  # Sin tilde
             "Balderas": (436, 151),
-            "Juarez": (436, 78),  # Sin tilde
-            "Niños Heroes": (436, 187),  # Con tilde como lo guardó el usuario
-            "Hospital General": (437, 230),
-            "Centro Medico": (436, 304),  # Sin tilde
-            "Etiopia": (437, 345),  # Sin tilde
-            "Eugenia": (436, 382),
-            "Division del Norte": (437, 422),  # Sin tilde
-            "Zapata": (436, 463),
-            "Coyoacan": (437, 501),  # Sin tilde
-            "Viveros": (437, 542),
-            "Miguel Angel de Quevedo": (436, 580),  # Con tildes
-            "Copilco": (437, 619),
-            "Universidad": (437, 658),
-            "Parque de los Venados": (535, 461),
-            "Eje Central": (596, 553),
-            "Insurgentes Sur": (250, 460),
-            "Hospital 20 de Noviembre": (336, 463),
-        }
-        # ------- NOOOO TOCAR !!!!!!!!!!!!! -------------
+            "Juarez": (436, 78),
+            "Niños Héroes": (436, 187),
+            "Hospital General": (436, 230),
 
-        # esto carga el mapa del metro
-        self.load_metro_map()
+            "Etiopia": (436, 345),
+            "Eugenia": (436, 382),
+            "Division del Norte": (436, 422),
+            "Coyoacan": (436, 501),
+            "Viveros": (436, 542),
+            "Miguel Ángel de Quevedo": (436, 580),
+            "Copilco": (436, 619),
+            "Universidad": (436, 658),
+            "Parque de los Venados": (535, 464),
+            "Eje Central": (596, 553),
+        }
+        # ------- NOOOO TOCAR (owner: Gaythier) !!!!!!!!!!!!! -------------
 
     def load_metro_map(self):
         # este codigo carga el mapa del metro en el GUI
@@ -244,11 +261,12 @@ class MetroGUI(tk.Tk):
         self.result_text.config(state="disabled")
 
     def display_image(self, path=None):
-        # esta funcion muestra el mapa del metro con la ruta resaltada en ROJO
-        if not hasattr(self, "original_image"):
-            return
-
-        # creamos una copia de la imagen original para dibujar sobre ella
+        #esta funcion muestra el mapa del metro con la ruta
+        #si no tiene la imagen original return
+        if not hasattr(self, 'original_image'):
+            raise Exception("Invalid state")
+        
+        #Creamos una copia de la imagen original
         img = self.original_image.copy()
 
         if path and len(path) > 1:

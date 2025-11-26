@@ -17,8 +17,8 @@ Mapa.add_edge("Cuauhtemoc_L1", "Balderas_L1", weight=1.08)
 
 # linea 3 (verde oliva) universidad - juarez
 Mapa.add_edge("Juarez_L3", "Balderas_L3", weight=1.40)
-Mapa.add_edge("Balderas_L3", "Ninos Héroes_L3", weight=1.43)
-Mapa.add_edge("Ninos Héroes_L3", "Hospital General_L3", weight=1.42)
+Mapa.add_edge("Balderas_L3", "Niños Héroes_L3", weight=1.43)
+Mapa.add_edge("Niños Héroes_L3", "Hospital General_L3", weight=1.42)
 Mapa.add_edge("Hospital General_L3", "Centro Medico_L3", weight=1.37)
 Mapa.add_edge("Centro Medico_L3", "Etiopia_L3", weight=2.40)
 Mapa.add_edge("Etiopia_L3", "Eugenia_L3", weight=1.98)
